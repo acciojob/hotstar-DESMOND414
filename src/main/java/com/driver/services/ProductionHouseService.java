@@ -15,7 +15,15 @@ public class ProductionHouseService {
 
     public Integer addProductionHouseToDb(ProductionHouseEntryDto productionHouseEntryDto){
 
-        return  null;
+
+        ProductionHouse productionHouse = new ProductionHouse(productionHouseEntryDto.getName());
+
+        // Save the new ProductionHouse to the database
+        ProductionHouse savedProductionHouse = productionHouseRepository.save(productionHouse);
+
+        // Return the ID of the newly created ProductionHouse
+        return savedProductionHouse.getId();
+
     }
 
 
