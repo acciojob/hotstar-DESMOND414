@@ -24,7 +24,32 @@ public class SubscriptionService {
 
     private int calculateTotalSubscriptionAmount(Subscription subscription) {
         // Calculate the total amount based on the subscription type and number of screens required
-        int totalAmount = subscription.getSubscriptionType().calculateTotalAmount(subscription.getNoOfScreensSubscribed());
+//        int totalAmount = subscription.getSubscriptionType().calculateTotalAmount(subscription.getNoOfScreensSubscribed());
+//        subscription.setTotalAmountPaid(totalAmount);
+//        subscriptionRepository.save(subscription);
+//        return totalAmount;
+//        int totalAmount = subscription.getSubscriptionType().getPrice() * subscription.getNoOfScreensSubscribed();
+//        subscription.setTotalAmountPaid(totalAmount);
+//        subscriptionRepository.save(subscription);
+//        return totalAmount;
+        SubscriptionType subscriptionType = subscription.getSubscriptionType();
+        int totalAmount;
+
+        switch (subscriptionType) {
+            case BASIC:
+                totalAmount = 500 * subscription.getNoOfScreensSubscribed();
+                break;
+            case PRO:
+                totalAmount = 800 * subscription.getNoOfScreensSubscribed();
+                break;
+            case ELITE:
+                totalAmount = 1000 * subscription.getNoOfScreensSubscribed();
+                break;
+            default:
+                totalAmount = 0;
+                break;
+        }
+
         subscription.setTotalAmountPaid(totalAmount);
         subscriptionRepository.save(subscription);
         return totalAmount;
@@ -42,9 +67,7 @@ public class SubscriptionService {
         Subscription subscription = new Subscription(
                 subscriptionEntryDto.getSubscriptionType(),
                 subscriptionEntryDto.getNoOfScreensRequired(),
-                new Date(),
-                0 // Initialize the total amount paid as 0
-        );
+                new Date(), 0);
 
         // Set the user of the subscription
         subscription.setUser(user);
@@ -73,13 +96,6 @@ public class SubscriptionService {
         return calculateTotalSubscriptionAmount(savedSubscription);
 
     }
-//    private int calculatePriceDifference(SubscriptionType currentSubscriptionType, SubscriptionType nextSubscriptionType) {
-//        // Calculate the difference in price between the current and next subscription type
-//        int currentPrice = currentSubscriptionType.calculateTotalAmount(1); // Assuming 1 screen for price calculation
-//        int nextPrice = nextSubscriptionType.calculateTotalAmount(1); // Assuming 1 screen for price calculation
-//        return nextPrice - currentPrice;
-//    }
-
     public Integer upgradeSubscription(Integer userId)throws Exception{
 
         //If you are already at an ElITE subscription : then throw Exception ("Already the best Subscription")
